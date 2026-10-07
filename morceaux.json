@@ -1,0 +1,401 @@
+{
+  "titre": "Répertoire de solfège",
+  "morceaux": [
+    {
+      "id": "2c",
+      "titre": "Exercice 2c",
+      "pistes": [
+        {
+          "label": "2ᵉ ligne",
+          "role": "lecture",
+          "fichier": "audio/2c-2eme-ligne.m4a",
+          "duree": 39
+        }
+      ],
+      "lecon": 2
+    },
+    {
+      "id": "2e",
+      "titre": "Exercice 2e",
+      "pistes": [
+        {
+          "label": "« Encore pire »",
+          "role": "lecture",
+          "fichier": "audio/2e-encore-pire.m4a",
+          "duree": 27
+        }
+      ],
+      "lecon": 2
+    },
+    {
+      "id": "2f",
+      "titre": "Exercice 2f",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "fichier": "audio/2f.m4a",
+          "duree": 73
+        }
+      ],
+      "lecon": 2
+    },
+    {
+      "id": "3b",
+      "titre": "Exercice 3b",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "fichier": "audio/3b.m4a",
+          "duree": 45
+        },
+        {
+          "label": "Accompagnement",
+          "role": "accompagnement",
+          "fichier": "audio/3b-accompagnement.m4a",
+          "duree": 97
+        }
+      ],
+      "lecon": 3
+    },
+    {
+      "id": "3c",
+      "titre": "Exercice 3c",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "fichier": "audio/3c.m4a",
+          "duree": 48
+        }
+      ],
+      "lecon": 3
+    },
+    {
+      "id": "3d",
+      "titre": "Exercice 3d",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "fichier": "audio/3d.m4a",
+          "duree": 96
+        }
+      ],
+      "lecon": 3
+    },
+    {
+      "id": "3e",
+      "titre": "Exercice 3e",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "fichier": "audio/3e.m4a",
+          "duree": 28
+        },
+        {
+          "label": "Accompagnement",
+          "role": "accompagnement",
+          "fichier": "audio/3e-accompagnement.m4a",
+          "duree": 29
+        }
+      ],
+      "lecon": 3
+    },
+    {
+      "id": "4a",
+      "titre": "Exercice 4a",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "fichier": "audio/4a.m4a",
+          "duree": 49
+        },
+        {
+          "label": "En sol mineur",
+          "role": "variante",
+          "fichier": "audio/4a-sol-mineur.m4a",
+          "duree": 42
+        }
+      ],
+      "lecon": 4
+    },
+    {
+      "id": "4b",
+      "titre": "Exercice 4b",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "fichier": "audio/4b.m4a",
+          "duree": 61
+        },
+        {
+          "label": "Accompagnement (piano seul)",
+          "role": "accompagnement",
+          "fichier": "audio/4b-accompagnement-piano.m4a",
+          "duree": 60
+        }
+      ],
+      "lecon": 4
+    },
+    {
+      "id": "4c",
+      "titre": "Exercice 4c",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "fichier": "audio/4c.m4a",
+          "duree": 75
+        }
+      ],
+      "lecon": 4
+    },
+    {
+      "id": "5a",
+      "titre": "Exercice 5a",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "fichier": "audio/5a.m4a",
+          "duree": 60
+        }
+      ],
+      "lecon": 5
+    },
+    {
+      "id": "5b",
+      "titre": "Exercice 5b",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "fichier": "audio/5b.m4a",
+          "duree": 68
+        }
+      ],
+      "lecon": 5
+    },
+    {
+      "id": "6a",
+      "titre": "Exercice 6a",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "fichier": "audio/6a.m4a",
+          "duree": 39
+        }
+      ],
+      "lecon": 6
+    },
+    {
+      "id": "6b",
+      "titre": "Exercice 6b",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "fichier": "audio/6b.m4a",
+          "duree": 41
+        },
+        {
+          "label": "« On s'accroche pour la fin »",
+          "role": "variante",
+          "fichier": "audio/6b-on-saccroche.m4a",
+          "duree": 42
+        }
+      ],
+      "lecon": 6
+    },
+    {
+      "id": "6c",
+      "titre": "Exercice 6c",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "fichier": "audio/6c.m4a",
+          "duree": 48
+        }
+      ],
+      "lecon": 6
+    },
+    {
+      "id": "7a",
+      "titre": "Exercice 7a",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "fichier": "audio/7a.m4a",
+          "duree": 85
+        },
+        {
+          "label": "Version difficile",
+          "role": "variante",
+          "fichier": "audio/7a-difficile.m4a",
+          "duree": 77
+        },
+        {
+          "label": "Accompagnement",
+          "role": "accompagnement",
+          "fichier": "audio/7a-accompagnement.m4a",
+          "duree": 82
+        },
+        {
+          "label": "Accompagnement (difficile)",
+          "role": "accompagnement",
+          "fichier": "audio/7a-accompagnement-difficile.m4a",
+          "duree": 73
+        }
+      ],
+      "lecon": 7
+    },
+    {
+      "id": "7b",
+      "titre": "Exercice 7b",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "fichier": "audio/7b.m4a",
+          "duree": 50
+        },
+        {
+          "label": "Accompagnement",
+          "role": "accompagnement",
+          "fichier": "audio/7b-accompagnement.m4a",
+          "duree": 91
+        }
+      ],
+      "lecon": 7
+    },
+    {
+      "id": "7c",
+      "titre": "Exercice 7c",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "fichier": "audio/7c.m4a",
+          "duree": 44
+        },
+        {
+          "label": "Accompagnement",
+          "role": "accompagnement",
+          "fichier": "audio/7c-accompagnement.m4a",
+          "duree": 67
+        }
+      ],
+      "lecon": 7
+    },
+    {
+      "id": "8a",
+      "titre": "Exercice 8a",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "fichier": "audio/8a.m4a",
+          "duree": 102
+        }
+      ],
+      "lecon": 8
+    }
+  ],
+  "autres": {
+    "titre": "Autres enregistrements",
+    "pistes": [
+      {
+        "label": "Enregistrement du 09/09 à 18h36",
+        "role": "autre",
+        "fichier": "audio/autre-01.m4a",
+        "duree": 107
+      },
+      {
+        "label": "Enregistrement du 09/09 à 18h49",
+        "role": "autre",
+        "fichier": "audio/autre-02.m4a",
+        "duree": 24
+      },
+      {
+        "label": "Enregistrement du 09/09 à 19h11",
+        "role": "autre",
+        "fichier": "audio/autre-03.m4a",
+        "duree": 27
+      },
+      {
+        "label": "Enregistrement du 09/09 à 19h30",
+        "role": "autre",
+        "fichier": "audio/autre-04.m4a",
+        "duree": 105
+      },
+      {
+        "label": "Enregistrement du 10/09 à 07h27",
+        "role": "autre",
+        "fichier": "audio/autre-05.m4a",
+        "duree": 39
+      },
+      {
+        "label": "Enregistrement du 10/09 à 18h22",
+        "role": "autre",
+        "fichier": "audio/autre-06.m4a",
+        "duree": 52
+      },
+      {
+        "label": "Enregistrement du 11/09 à 15h35",
+        "role": "autre",
+        "fichier": "audio/autre-07.m4a",
+        "duree": 67
+      },
+      {
+        "label": "Enregistrement du 11/09 à 15h36",
+        "role": "autre",
+        "fichier": "audio/autre-08.m4a",
+        "duree": 57
+      },
+      {
+        "label": "Enregistrement du 16/09 à 18h32",
+        "role": "autre",
+        "fichier": "audio/autre-09.m4a",
+        "duree": 150
+      },
+      {
+        "label": "Enregistrement du 16/09 à 18h32",
+        "role": "autre",
+        "fichier": "audio/autre-10.m4a",
+        "duree": 56
+      },
+      {
+        "label": "Enregistrement du 16/09 à 18h32",
+        "role": "autre",
+        "fichier": "audio/autre-11.m4a",
+        "duree": 257
+      },
+      {
+        "label": "Enregistrement du 16/09 à 18h32",
+        "role": "autre",
+        "fichier": "audio/autre-12.m4a",
+        "duree": 26
+      },
+      {
+        "label": "Nouvel enregistrement 170",
+        "role": "autre",
+        "fichier": "audio/autre-13.m4a",
+        "duree": 45
+      },
+      {
+        "label": "Battue syncope",
+        "role": "autre",
+        "fichier": "audio/autre-14.m4a",
+        "duree": 22
+      }
+    ]
+  }
+}
