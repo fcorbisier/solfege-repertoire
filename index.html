@@ -110,6 +110,31 @@ select.btn { appearance: auto; }
 .mix output { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 3.2em; text-align: right; }
 .mix[hidden] { display: none; }
 #ab { font-size: .75rem; color: var(--muted); min-width: 4.5em; text-align: right; }
+
+.beat { margin: 8px 0 2px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--soft); }
+.beat[hidden] { display: none; }
+.bt-top { display: flex; align-items: center; gap: 10px; }
+.bt-top svg { width: 84px; height: 84px; flex: none; }
+.bt-mid { flex: 1; min-width: 0; }
+.dots { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; min-height: 26px; }
+.dots i { width: 16px; height: 16px; border-radius: 50%; background: var(--line); transition: background .08s, transform .08s; }
+.dots i.main { width: 22px; height: 22px; }
+.dots i.on { background: var(--accent); transform: scale(1.25); }
+.dots i.on.first { background: #d9822b; }
+.bt-info { font-size: .8rem; color: var(--muted); margin-top: 4px; }
+.bt-set { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px 10px; margin-top: 8px; font-size: .8rem; }
+.bt-set[hidden] { display: none; }
+.bt-set label { display: flex; flex-direction: column; gap: 2px; color: var(--muted); }
+.bt-set input { font: inherit; padding: 4px 6px; width: 100%; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); }
+.bt-set .wide { grid-column: 1 / -1; }
+.bt-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.bt-btns .btn { padding: 6px 10px; }
+#tap { flex: 1; font-weight: 600; }
+#tap.rec { background: #d9822b; color: #fff; }
+#bt-json { font: .72rem/1.3 ui-monospace, monospace; color: var(--muted); user-select: all; }
+.bt-line { stroke: var(--muted); opacity: .35; fill: none; stroke-width: 2; stroke-linejoin: round; }
+.bt-ball { fill: var(--accent); }
+.bt-ball.hit { fill: #d9822b; }
 @media (max-width: 420px) { .ctrl { justify-content: center; } .opts { justify-content: center; } }
 </style>
 </head>
@@ -130,6 +155,27 @@ select.btn { appearance: auto; }
       <span id="cur">0:00</span>
       <input type="range" id="seek" min="0" max="1" step="0.1" value="0" aria-label="Position">
       <span id="tot">0:00</span>
+    </div>
+    <div class="beat" id="beat" hidden>
+      <div class="bt-top">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><path class="bt-line" id="btPath" d=""/><circle class="bt-ball" id="btBall" r="7" cx="50" cy="85"/></svg>
+        <div class="bt-mid">
+          <div class="dots" id="dots" aria-hidden="true"></div>
+          <div class="bt-info" id="btInfo"></div>
+        </div>
+        <button class="btn" id="btCfg" type="button" aria-expanded="false">Tempo</button>
+      </div>
+      <div class="bt-set" id="btSet" hidden>
+        <label>Tempo (battue/min)<input type="number" id="btBpm" min="20" max="240" step="0.1" inputmode="decimal"></label>
+        <label>1er temps fort (s)<input type="number" id="btDeb" min="0" step="0.01" inputmode="decimal"></label>
+        <label>Mesures de silence<input type="number" id="btSil" min="0" max="8" step="1" inputmode="numeric"></label>
+        <div class="bt-btns wide">
+          <button class="btn" id="tap" type="button">Taper le tempo : lance l'audio, tape chaque temps (1er tap = temps fort)</button>
+          <button class="btn" id="btReset" type="button">Effacer</button>
+        </div>
+        <div class="wide bt-info">Décalage audio (Bluetooth) <input type="range" id="btLat" min="-300" max="300" step="10" value="0" style="width:60%;vertical-align:middle"> <output id="btLato">0 ms</output></div>
+        <div class="wide" id="bt-json"></div>
+      </div>
     </div>
     <div class="modes" id="modes" role="group" aria-label="Version de l'enregistrement">
       <button class="btn" type="button" id="mOrig" aria-pressed="false">Original</button>
@@ -181,6 +227,10 @@ select.btn { appearance: auto; }
   const files = (t) => [t.piano, t.voix, t.original].filter(Boolean);
   const missing = new Set();   // fichiers introuvables : ignorés pour le hors ligne
   const isCached = (t) => files(t).every((f) => cachedSet.has(f) || missing.has(f));
+
+  // le lecteur est fixe en bas : on réserve sa hauteur réelle pour que la fin de la liste reste visible
+  const fitPlayer = () => { const p = $('#player'); document.body.style.paddingBottom = p.hidden ? '' : (p.offsetHeight + 24) + 'px'; };
+  new ResizeObserver(fitPlayer).observe($('#player'));
 
   async function init() {
     try {
@@ -246,7 +296,7 @@ select.btn { appearance: auto; }
     let idx = 0;
     const lecons = new Map();
     for (const m of data.morceaux) {
-      for (const p of m.pistes) { p.idx = idx++; p.exo = m.titre; tracks.push(p); }
+      for (const p of m.pistes) { p.idx = idx++; p.exo = m.titre; p.mesure = p.mesure || m.mesure; if (p.silence == null && m.silence) p.silence = m.silence; tracks.push(p); }
       if (!lecons.has(m.lecon)) lecons.set(m.lecon, []);
       lecons.get(m.lecon).push(m);
     }
@@ -287,7 +337,8 @@ select.btn { appearance: auto; }
     const t = tracks[i]; if (!t) return;
     cur = i; a = b = null; updateAB();
     setSources(t);
-    $('#player').hidden = false;
+    loadBeat(t);
+    $('#player').hidden = false; fitPlayer();
     $('#npt').textContent = t.exo; $('#nps').textContent = t.label;
     $('#seek').value = 0; $('#cur').textContent = '0:00'; $('#tot').textContent = fmt(t.duree);
     if ('mediaSession' in navigator) {
@@ -365,6 +416,7 @@ select.btn { appearance: auto; }
   seek.addEventListener('change', () => { seekTo(parseFloat(seek.value)); dragging = false; });
 
   audio.addEventListener('loadedmetadata', () => { seek.max = audio.duration; $('#tot').textContent = fmt(audio.duration); });
+  audio.addEventListener('seeked', () => drawBeat());
   audio.addEventListener('play', () => { $('#pp').innerHTML = PAUSE; tick(); });
   audio.addEventListener('pause', () => { $('#pp').innerHTML = PLAY; voice.pause(); });
   audio.addEventListener('ended', () => {
@@ -382,8 +434,127 @@ select.btn { appearance: auto; }
   // boucle A–B précise (timeupdate est trop lent pour ça)
   function tick() {
     if (b != null && audio.currentTime >= b) seekTo(a); else resync();
+    drawBeat();
     if (!audio.paused) requestAnimationFrame(tick);
   }
+
+
+  // --- pulsation + battue de mesure ---
+  // Tempo = battue (noire en 2/4, 3/4, 4/4 ; noire pointée en 6/8). Les temps sont calculés depuis audio.currentTime :
+  // l'animation suit donc la vitesse, les sauts, les boucles A–B.
+  const PATTERNS = {
+    2: [[50, 86], [50, 30]],
+    3: [[38, 86], [78, 55], [50, 24]],
+    4: [[50, 86], [22, 58], [78, 58], [50, 22]],
+  };
+  const beatCfg = { n: 2, sub: 1, bpm: 0, deb: 0, sil: 0, lat: 0 };
+  let tapping = false, taps = [];
+  const bkey = (t) => 'beat:' + (t.piano || t.original);
+  function loadBeat(t) {
+    const m = /^(\d+)\/(\d+)$/.exec(t.mesure || '');
+    beatCfg.n = 0;
+    if (m) { const num = +m[1], den = +m[2]; beatCfg.n = den === 8 ? num / 3 : num; beatCfg.sub = den === 8 ? 3 : 1; }
+    let o = {}; try { o = JSON.parse(store.get(bkey(t), '{}')) || {}; } catch {}
+    beatCfg.bpm = +(o.bpm ?? t.bpm ?? 0);
+    beatCfg.deb = +(o.debut ?? t.debut ?? 0);
+    beatCfg.sil = +(o.silence ?? t.silence ?? 0);
+    beatCfg.lat = +store.get('beat-lat', '0') / 1000;
+    tapping = false; taps = []; $('#tap').classList.remove('rec');
+    $('#beat').hidden = !beatCfg.n;
+    if (!beatCfg.n) return;
+    const pts = PATTERNS[beatCfg.n];
+    $('#btPath').setAttribute('d', 'M' + pts.map((p) => p.join(',')).join('L') + 'L' + pts[0].join(','));
+    const dots = $('#dots'); dots.innerHTML = '';
+    const total = beatCfg.n * beatCfg.sub;
+    for (let i = 0; i < total; i++) {
+      const d = document.createElement('i');
+      if (i % beatCfg.sub === 0) d.className = 'main' + (i === 0 ? ' first' : '');
+      dots.append(d);
+    }
+    $('#btBpm').value = beatCfg.bpm || ''; $('#btDeb').value = beatCfg.deb || ''; $('#btSil').value = beatCfg.sil;
+    $('#btLat').value = beatCfg.lat * 1000; $('#btLato').textContent = Math.round(beatCfg.lat * 1000) + ' ms';
+    showBeatJson(t);
+    drawBeat(true);
+  }
+  function showBeatJson(t) {
+    $('#bt-json').textContent = beatCfg.bpm ? `"bpm": ${beatCfg.bpm}, "debut": ${beatCfg.deb}` + (beatCfg.sil ? `, "silence": ${beatCfg.sil}` : '') : '';
+  }
+  function saveBeat() {
+    const t = tracks[cur]; if (!t) return;
+    store.set(bkey(t), JSON.stringify({ bpm: beatCfg.bpm, debut: beatCfg.deb, silence: beatCfg.sil }));
+    showBeatJson(t);
+  }
+  const lastDots = { k: -1 };
+  function drawBeat(force) {
+    if (!beatCfg.n || $('#beat').hidden) return;
+    const info = $('#btInfo'), ball = $('#btBall');
+    if (!beatCfg.bpm) { info.textContent = `${tracks[cur].mesure} — règle le tempo (bouton « Tempo »)`; return; }
+    const per = 60 / beatCfg.bpm;
+    const t = audio.currentTime - beatCfg.lat;
+    // origine = début de la 1re mesure (éventuellement silencieuse)
+    const origin = beatCfg.deb - beatCfg.sil * beatCfg.n * per;
+    const x = (t - origin) / per;                    // position en temps (battue)
+    if (x < 0) { setDots(-1); ball.setAttribute('cx', PATTERNS[beatCfg.n][0][0]); ball.setAttribute('cy', PATTERNS[beatCfg.n][0][1]); info.textContent = `${tracks[cur].mesure} · ${Math.round(beatCfg.bpm)}/min`; return; }
+    const k = Math.floor(x), f = x - k;
+    const bar = Math.floor(k / beatCfg.n), bt = k % beatCfg.n;
+    const pts = PATTERNS[beatCfg.n], p0 = pts[bt], p1 = pts[(bt + 1) % beatCfg.n];
+    // la balle atteint chaque point (ictus) exactement sur le temps : accélère vers lui, rebondit après
+    const e = f * f;
+    let px = p0[0] + (p1[0] - p0[0]) * e, py = p0[1] + (p1[1] - p0[1]) * e;
+    ball.setAttribute('cx', px.toFixed(1)); ball.setAttribute('cy', py.toFixed(1));
+    ball.classList.toggle('hit', f < 0.12);
+    const sub = beatCfg.sub > 1 ? Math.floor(f * beatCfg.sub) : 0;
+    setDots(bt * beatCfg.sub + sub);
+    const num = bar - beatCfg.sil + 1;
+    info.textContent = `${tracks[cur].mesure} · ${Math.round(beatCfg.bpm)}/min · ` + (num >= 1 ? `mesure ${num}` : 'mesure à vide');
+  }
+  function setDots(i) {
+    if (lastDots.k === i) return; lastDots.k = i;
+    $('#dots').childNodes.forEach((d, j) => d.classList.toggle('on', j === i && (beatCfg.sub === 1 || true)));
+  }
+  $('#btCfg').addEventListener('click', () => {
+    const open = $('#btSet').hidden; $('#btSet').hidden = !open; $('#btCfg').setAttribute('aria-expanded', open); fitPlayer();
+  });
+  for (const [id, key] of [['#btBpm', 'bpm'], ['#btDeb', 'deb'], ['#btSil', 'sil']]) {
+    $(id).addEventListener('input', () => { beatCfg[key] = parseFloat($(id).value) || 0; saveBeat(); drawBeat(true); });
+  }
+  $('#btLat').addEventListener('input', (e) => { beatCfg.lat = e.target.value / 1000; $('#btLato').textContent = e.target.value + ' ms'; store.set('beat-lat', e.target.value); });
+  $('#btReset').addEventListener('click', () => {
+    const t = tracks[cur]; if (!t) return;
+    try { localStorage.removeItem(bkey(t)); } catch {}
+    loadBeat(t);
+  });
+  // Tap : 1er tap = temps fort de la 1re mesure sonore, puis un tap par temps (battue). Ajustement par régression.
+  $('#tap').addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    if (audio.paused) { playBoth(); return; }
+    if (!tapping) { tapping = true; taps = []; $('#tap').classList.add('rec'); }
+    taps.push(audio.currentTime - beatCfg.lat);
+    $('#tap').textContent = `${taps.length} tap${taps.length > 1 ? 's' : ''} — continue ; arrête-toi 2 s pour valider (≥ 6)`;
+    if (taps.length >= 8 || false) { /* assez : l'utilisateur peut continuer */ }
+  });
+  $('#tap').addEventListener('click', (e) => {
+    // clic clavier/souris sans pointer : ignoré ; la validation se fait via double-pression longue ci-dessous
+  });
+  function finishTap() {
+    if (taps.length < 4) { tapping = false; taps = []; $('#tap').classList.remove('rec'); $('#tap').textContent = 'Taper le tempo : lance l\'audio, tape chaque temps (1er tap = temps fort)'; return; }
+    const n = taps.length; let sx = 0, sy = 0, sxx = 0, sxy = 0;
+    // écarte les doubles taps (< 40 % du pas médian)
+    const d = taps.slice(1).map((v, i) => v - taps[i]).sort((x, y) => x - y); const med = d[d.length >> 1];
+    const clean = taps.filter((v, i) => i === 0 || v - taps[i - 1] > med * 0.4);
+    const m = clean.length;
+    // index entier le plus proche pour chaque tap (tolère les temps sautés)
+    const idx = clean.map((v) => Math.round((v - clean[0]) / med));
+    for (let i = 0; i < m; i++) { sx += idx[i]; sy += clean[i]; sxx += idx[i] * idx[i]; sxy += idx[i] * clean[i]; }
+    const slope = (m * sxy - sx * sy) / (m * sxx - sx * sx), icpt = (sy - slope * sx) / m;
+    beatCfg.bpm = Math.round(600 / slope) / 10; beatCfg.deb = Math.max(0, Math.round(icpt * 100) / 100);
+    $('#btBpm').value = beatCfg.bpm; $('#btDeb').value = beatCfg.deb;
+    tapping = false; taps = []; $('#tap').classList.remove('rec'); $('#tap').textContent = 'Taper le tempo : lance l\'audio, tape chaque temps (1er tap = temps fort)';
+    saveBeat(); drawBeat(true);
+  }
+  // validation : on arrête le tap dès que l'utilisateur met en pause, ou sur le bouton « Tempo » pendant la capture
+  audio.addEventListener('pause', () => { if (tapping) finishTap(); });
+  setInterval(() => { if (tapping && taps.length >= 6 && audio.currentTime - taps[taps.length - 1] > 2.5) finishTap(); }, 500);
 
   // --- piano + voix : deux pistes, deux volumes (Web Audio pour que ça marche aussi sur iPhone) ---
   let actx = null, gP = null, gV = null;
@@ -414,7 +585,7 @@ select.btn { appearance: auto; }
     if (hasVoice()) voice.play().catch(() => {});
   }
   function toggle() { if (audio.paused) playBoth(); else { audio.pause(); voice.pause(); } }
-  function seekTo(t) { audio.currentTime = t; if (hasVoice()) voice.currentTime = t; }
+  function seekTo(t) { audio.currentTime = t; if (hasVoice()) voice.currentTime = t; drawBeat(); }
   for (const [id, key] of [['#vp', 'vol-piano'], ['#vv', 'vol-voix']]) {
     $(id).value = store.get(key, $(id).value);
     $(id).addEventListener('input', () => { applyVol(); store.set(key, $(id).value); });

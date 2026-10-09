@@ -2,6 +2,38 @@
   "titre": "Répertoire de solfège",
   "morceaux": [
     {
+      "id": "2a",
+      "titre": "Exercice 2a",
+      "lecon": 2,
+      "mesure": "2/4",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "duree": 67,
+          "piano": "audio/audio_autre-07.piano.m4a",
+          "voix": "audio/audio_autre-07.voix.m4a",
+          "original": "audio/audio_autre-07.m4a"
+        }
+      ]
+    },
+    {
+      "id": "2b",
+      "titre": "Exercice 2b",
+      "lecon": 2,
+      "mesure": "2/4",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "duree": 52,
+          "piano": "audio/audio_autre-06.piano.m4a",
+          "voix": "audio/audio_autre-06.voix.m4a",
+          "original": "audio/audio_autre-06.m4a"
+        }
+      ]
+    },
+    {
       "id": "2c",
       "titre": "Exercice 2c",
       "pistes": [
@@ -14,7 +46,24 @@
           "original": "audio/audio_2c-2eme-ligne.m4a"
         }
       ],
-      "lecon": 2
+      "lecon": 2,
+      "mesure": "2/4"
+    },
+    {
+      "id": "2d",
+      "titre": "Exercice 2d",
+      "lecon": 2,
+      "mesure": "2/4",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "duree": 39,
+          "piano": "audio/audio_autre-05.piano.m4a",
+          "voix": "audio/audio_autre-05.voix.m4a",
+          "original": "audio/audio_autre-05.m4a"
+        }
+      ]
     },
     {
       "id": "2e",
@@ -29,7 +78,8 @@
           "original": "audio/audio_2e-encore-pire.m4a"
         }
       ],
-      "lecon": 2
+      "lecon": 2,
+      "mesure": "3/4"
     },
     {
       "id": "2f",
@@ -44,7 +94,24 @@
           "original": "audio/audio_2f.m4a"
         }
       ],
-      "lecon": 2
+      "lecon": 2,
+      "mesure": "3/4"
+    },
+    {
+      "id": "3a",
+      "titre": "Exercice 3a",
+      "lecon": 3,
+      "mesure": "6/8",
+      "pistes": [
+        {
+          "label": "Lecture",
+          "role": "lecture",
+          "duree": 150,
+          "piano": "audio/audio_autre-09.piano.m4a",
+          "voix": "audio/audio_autre-09.voix.m4a",
+          "original": "audio/audio_autre-09.m4a"
+        }
+      ]
     },
     {
       "id": "3b",
@@ -65,9 +132,18 @@
           "piano": "audio/audio_3b-accompagnement.piano.m4a",
           "voix": "audio/audio_3b-accompagnement.voix.m4a",
           "original": "audio/audio_3b-accompagnement.m4a"
+        },
+        {
+          "label": "Enregistrement 2",
+          "role": "variante",
+          "duree": 257,
+          "piano": "audio/audio_autre-11.piano.m4a",
+          "voix": "audio/audio_autre-11.voix.m4a",
+          "original": "audio/audio_autre-11.m4a"
         }
       ],
-      "lecon": 3
+      "lecon": 3,
+      "mesure": "6/8"
     },
     {
       "id": "3c",
@@ -80,9 +156,26 @@
           "piano": "audio/audio_3c.piano.m4a",
           "voix": "audio/audio_3c.voix.m4a",
           "original": "audio/audio_3c.m4a"
+        },
+        {
+          "label": "Enregistrement 2 (26 s)",
+          "role": "variante",
+          "duree": 26,
+          "piano": "audio/audio_autre-12.piano.m4a",
+          "voix": "audio/audio_autre-12.voix.m4a",
+          "original": "audio/audio_autre-12.m4a"
+        },
+        {
+          "label": "Enregistrement 3 (56 s)",
+          "role": "variante",
+          "duree": 56,
+          "piano": "audio/audio_autre-10.piano.m4a",
+          "voix": "audio/audio_autre-10.voix.m4a",
+          "original": "audio/audio_autre-10.m4a"
         }
       ],
-      "lecon": 3
+      "lecon": 3,
+      "mesure": "6/8"
     },
     {
       "id": "3d",
@@ -97,7 +190,8 @@
           "original": "audio/audio_3d.m4a"
         }
       ],
-      "lecon": 3
+      "lecon": 3,
+      "mesure": "6/8"
     },
     {
       "id": "3e",
@@ -119,7 +213,8 @@
           "original": "audio/audio_3e-accompagnement.m4a"
         }
       ],
-      "lecon": 3
+      "lecon": 3,
+      "mesure": "6/8"
     },
     {
       "id": "4a",
@@ -142,7 +237,8 @@
           "original": "audio/audio_4a-sol-mineur.m4a"
         }
       ],
-      "lecon": 4
+      "lecon": 4,
+      "mesure": "6/8"
     },
     {
       "id": "4b",
@@ -165,7 +261,8 @@
           "original": "audio/audio_4b-accompagnement-piano.m4a"
         }
       ],
-      "lecon": 4
+      "lecon": 4,
+      "mesure": "6/8"
     },
     {
       "id": "4c",
@@ -180,7 +277,8 @@
           "original": "audio/audio_4c.m4a"
         }
       ],
-      "lecon": 4
+      "lecon": 4,
+      "mesure": "6/8"
     },
     {
       "id": "5a",
@@ -193,9 +291,19 @@
           "piano": "audio/audio_5a.piano.m4a",
           "voix": "audio/audio_5a.voix.m4a",
           "original": "audio/audio_5a.m4a"
+        },
+        {
+          "label": "Enregistrement 2",
+          "role": "variante",
+          "duree": 45,
+          "piano": "audio/audio_autre-13.piano.m4a",
+          "voix": "audio/audio_autre-13.voix.m4a",
+          "original": "audio/audio_autre-13.m4a"
         }
       ],
-      "lecon": 5
+      "lecon": 5,
+      "mesure": "6/8",
+      "silence": 1
     },
     {
       "id": "5b",
@@ -210,7 +318,8 @@
           "original": "audio/audio_5b.m4a"
         }
       ],
-      "lecon": 5
+      "lecon": 5,
+      "mesure": "6/8"
     },
     {
       "id": "6a",
@@ -225,7 +334,8 @@
           "original": "audio/audio_6a.m4a"
         }
       ],
-      "lecon": 6
+      "lecon": 6,
+      "mesure": "2/4"
     },
     {
       "id": "6b",
@@ -248,7 +358,8 @@
           "original": "audio/audio_6b-on-saccroche.m4a"
         }
       ],
-      "lecon": 6
+      "lecon": 6,
+      "mesure": "2/4"
     },
     {
       "id": "6c",
@@ -263,7 +374,8 @@
           "original": "audio/audio_6c.m4a"
         }
       ],
-      "lecon": 6
+      "lecon": 6,
+      "mesure": "6/8"
     },
     {
       "id": "7a",
@@ -301,7 +413,8 @@
           "original": "audio/audio_7a-accompagnement-difficile.m4a"
         }
       ],
-      "lecon": 7
+      "lecon": 7,
+      "mesure": "4/4"
     },
     {
       "id": "7b",
@@ -324,7 +437,8 @@
           "original": "audio/audio_7b-accompagnement.m4a"
         }
       ],
-      "lecon": 7
+      "lecon": 7,
+      "mesure": "3/4"
     },
     {
       "id": "7c",
@@ -347,7 +461,9 @@
           "original": "audio/audio_7c-accompagnement.m4a"
         }
       ],
-      "lecon": 7
+      "lecon": 7,
+      "mesure": "6/8",
+      "silence": 2
     },
     {
       "id": "8a",
@@ -362,7 +478,8 @@
           "original": "audio/audio_8a.m4a"
         }
       ],
-      "lecon": 8
+      "lecon": 8,
+      "mesure": "2/4"
     }
   ],
   "autres": {
@@ -377,7 +494,7 @@
         "original": "audio/audio_autre-01.m4a"
       },
       {
-        "label": "Enregistrement du 09/09 à 18h49",
+        "label": "Rythmique n°2 p. 40 (09/09, 18h49)",
         "role": "autre",
         "duree": 24,
         "piano": "audio/audio_autre-02.piano.m4a",
@@ -401,75 +518,11 @@
         "original": "audio/audio_autre-04.m4a"
       },
       {
-        "label": "Enregistrement du 10/09 à 07h27",
-        "role": "autre",
-        "duree": 39,
-        "piano": "audio/audio_autre-05.piano.m4a",
-        "voix": "audio/audio_autre-05.voix.m4a",
-        "original": "audio/audio_autre-05.m4a"
-      },
-      {
-        "label": "Enregistrement du 10/09 à 18h22",
-        "role": "autre",
-        "duree": 52,
-        "piano": "audio/audio_autre-06.piano.m4a",
-        "voix": "audio/audio_autre-06.voix.m4a",
-        "original": "audio/audio_autre-06.m4a"
-      },
-      {
-        "label": "Enregistrement du 11/09 à 15h35",
-        "role": "autre",
-        "duree": 67,
-        "piano": "audio/audio_autre-07.piano.m4a",
-        "voix": "audio/audio_autre-07.voix.m4a",
-        "original": "audio/audio_autre-07.m4a"
-      },
-      {
         "label": "Enregistrement du 11/09 à 15h36",
         "role": "autre",
         "duree": 57,
         "piano": "audio/audio_autre-08.piano.m4a",
         "original": "audio/audio_autre-08.m4a"
-      },
-      {
-        "label": "Enregistrement du 16/09 à 18h32",
-        "role": "autre",
-        "duree": 150,
-        "piano": "audio/audio_autre-09.piano.m4a",
-        "voix": "audio/audio_autre-09.voix.m4a",
-        "original": "audio/audio_autre-09.m4a"
-      },
-      {
-        "label": "Enregistrement du 16/09 à 18h32",
-        "role": "autre",
-        "duree": 56,
-        "piano": "audio/audio_autre-10.piano.m4a",
-        "voix": "audio/audio_autre-10.voix.m4a",
-        "original": "audio/audio_autre-10.m4a"
-      },
-      {
-        "label": "Enregistrement du 16/09 à 18h32",
-        "role": "autre",
-        "duree": 257,
-        "piano": "audio/audio_autre-11.piano.m4a",
-        "voix": "audio/audio_autre-11.voix.m4a",
-        "original": "audio/audio_autre-11.m4a"
-      },
-      {
-        "label": "Enregistrement du 16/09 à 18h32",
-        "role": "autre",
-        "duree": 26,
-        "piano": "audio/audio_autre-12.piano.m4a",
-        "voix": "audio/audio_autre-12.voix.m4a",
-        "original": "audio/audio_autre-12.m4a"
-      },
-      {
-        "label": "Nouvel enregistrement 170",
-        "role": "autre",
-        "duree": 45,
-        "piano": "audio/audio_autre-13.piano.m4a",
-        "voix": "audio/audio_autre-13.voix.m4a",
-        "original": "audio/audio_autre-13.m4a"
       },
       {
         "label": "Battue syncope",
