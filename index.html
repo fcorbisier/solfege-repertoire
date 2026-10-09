@@ -11,7 +11,6 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Solfège">
-
 <style>
 :root {
   --bg: #faf8f3; --card: #ffffff; --ink: #1d2433; --muted: #6a7285; --line: #e3dfd4;
@@ -128,6 +127,11 @@ select.btn { appearance: auto; }
 .bt-set label { display: flex; flex-direction: column; gap: 2px; color: var(--muted); }
 .bt-set input { font: inherit; padding: 4px 6px; width: 100%; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); }
 .bt-set .wide { grid-column: 1 / -1; }
+.bt-msg { font-size: .88rem; color: var(--ink); line-height: 1.35; }
+.bt-man { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px 10px; margin: 6px 0; }
+#calRun[hidden], #tap[hidden], #calStart[hidden] { display: none; }
+#tap { padding: 22px 10px; font-size: 1.05rem; }
+.bt-set summary { cursor: pointer; color: var(--muted); }
 .bt-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
 .bt-btns .btn { padding: 6px 10px; }
 #tap { flex: 1; font-weight: 600; }
@@ -164,18 +168,29 @@ select.btn { appearance: auto; }
           <div class="dots" id="dots" aria-hidden="true"></div>
           <div class="bt-info" id="btInfo"></div>
         </div>
-        <button class="btn" id="btCfg" type="button" aria-expanded="false">Tempo</button>
+        <button class="btn" id="btCfg" type="button" aria-expanded="false">Régler</button>
       </div>
       <div class="bt-set" id="btSet" hidden>
-        <label>Tempo (battue/min)<input type="number" id="btBpm" min="20" max="240" step="0.1" inputmode="decimal"></label>
-        <label>1er temps fort (s)<input type="number" id="btDeb" min="0" step="0.01" inputmode="decimal"></label>
-        <label>Mesures de silence<input type="number" id="btSil" min="0" max="8" step="1" inputmode="numeric"></label>
+        <div class="wide bt-msg" id="calMsg"></div>
         <div class="bt-btns wide">
-          <button class="btn" id="tap" type="button">Taper le tempo : lance l'audio, tape chaque temps (1er tap = temps fort)</button>
-          <button class="btn" id="btReset" type="button">Effacer</button>
+          <button class="btn" id="calStart" type="button">Caler la battue</button>
+          <button class="btn" id="tap" type="button" hidden>TAPE ICI à chaque temps</button>
         </div>
-        <div class="wide bt-info">Décalage audio (Bluetooth) <input type="range" id="btLat" min="-300" max="300" step="10" value="0" style="width:60%;vertical-align:middle"> <output id="btLato">0 ms</output></div>
-        <div class="wide" id="bt-json"></div>
+        <div class="bt-btns wide" id="calRun" hidden>
+          <button class="btn" id="calDone" type="button">Terminer</button>
+          <button class="btn" id="calCancel" type="button">Annuler</button>
+        </div>
+        <details class="wide">
+          <summary>Réglage manuel</summary>
+          <div class="bt-man">
+            <label>Tempo (battues/min)<input type="number" id="btBpm" min="20" max="240" step="0.1" inputmode="decimal"></label>
+            <label>1er temps fort (s)<input type="number" id="btDeb" min="0" step="0.01" inputmode="decimal"></label>
+            <label>Mesures de silence<input type="number" id="btSil" min="0" max="8" step="1" inputmode="numeric"></label>
+          </div>
+          <div class="bt-info">Décalage audio (Bluetooth) <input type="range" id="btLat" min="-300" max="300" step="10" value="0" style="width:55%;vertical-align:middle"> <output id="btLato">0 ms</output></div>
+          <div class="bt-btns"><button class="btn" id="btReset" type="button">Effacer le réglage</button></div>
+          <div id="bt-json"></div>
+        </details>
       </div>
     </div>
     <div class="modes" id="modes" role="group" aria-label="Version de l'enregistrement">
@@ -460,7 +475,6 @@ select.btn { appearance: auto; }
     beatCfg.deb = +(o.debut ?? t.debut ?? 0);
     beatCfg.sil = +(o.silence ?? t.silence ?? 0);
     beatCfg.lat = +store.get('beat-lat', '0') / 1000;
-    tapping = false; taps = []; $('#tap').classList.remove('rec');
     $('#beat').hidden = !beatCfg.n;
     if (!beatCfg.n) return;
     const pts = PATTERNS[beatCfg.n];
@@ -475,6 +489,7 @@ select.btn { appearance: auto; }
     $('#btBpm').value = beatCfg.bpm || ''; $('#btDeb').value = beatCfg.deb || ''; $('#btSil').value = beatCfg.sil;
     $('#btLat').value = beatCfg.lat * 1000; $('#btLato').textContent = Math.round(beatCfg.lat * 1000) + ' ms';
     showBeatJson(t);
+    calUi(false); taps = []; idleMsg();
     drawBeat(true);
   }
   function showBeatJson(t) {
@@ -489,7 +504,7 @@ select.btn { appearance: auto; }
   function drawBeat(force) {
     if (!beatCfg.n || $('#beat').hidden) return;
     const info = $('#btInfo'), ball = $('#btBall');
-    if (!beatCfg.bpm) { info.textContent = `${tracks[cur].mesure} — règle le tempo (bouton « Tempo »)`; return; }
+    if (!beatCfg.bpm) { info.textContent = `${tracks[cur].mesure} — règle la battue (bouton « Régler »)`; return; }
     const per = 60 / beatCfg.bpm;
     const t = audio.currentTime - beatCfg.lat;
     // origine = début de la 1re mesure (éventuellement silencieuse)
@@ -517,7 +532,7 @@ select.btn { appearance: auto; }
     const open = $('#btSet').hidden; $('#btSet').hidden = !open; $('#btCfg').setAttribute('aria-expanded', open); fitPlayer();
   });
   for (const [id, key] of [['#btBpm', 'bpm'], ['#btDeb', 'deb'], ['#btSil', 'sil']]) {
-    $(id).addEventListener('input', () => { beatCfg[key] = parseFloat($(id).value) || 0; saveBeat(); drawBeat(true); });
+    $(id).addEventListener('input', () => { beatCfg[key] = parseFloat($(id).value) || 0; saveBeat(); if (!tapping) idleMsg(); drawBeat(true); });
   }
   $('#btLat').addEventListener('input', (e) => { beatCfg.lat = e.target.value / 1000; $('#btLato').textContent = e.target.value + ' ms'; store.set('beat-lat', e.target.value); });
   $('#btReset').addEventListener('click', () => {
@@ -525,37 +540,44 @@ select.btn { appearance: auto; }
     try { localStorage.removeItem(bkey(t)); } catch {}
     loadBeat(t);
   });
-  // Tap : 1er tap = temps fort de la 1re mesure sonore, puis un tap par temps (battue). Ajustement par régression.
+  // Calage guidé : « Caler la battue » relance l'audio, l'utilisateur tape chaque temps, « Terminer » calcule.
+  const calMsg = (m) => { $('#calMsg').textContent = m; };
+  function idleMsg() {
+    calMsg(beatCfg.bpm
+      ? `Battue réglée : ${beatCfg.bpm} par minute, 1er temps fort à ${beatCfg.deb} s. Lance l'audio et regarde : la balle doit toucher le bas exactement sur chaque temps. Sinon, recommence.`
+      : 'Battue pas encore réglée pour cet enregistrement. Appuie sur « Caler la battue » : l\'audio repart du début et tu tapes chaque temps.');
+  }
+  function calUi(running) {
+    tapping = running;
+    $('#tap').hidden = !running; $('#calRun').hidden = !running; $('#calStart').hidden = running;
+    $('#tap').classList.toggle('rec', running); fitPlayer();
+  }
+  $('#calStart').addEventListener('click', () => {
+    taps = []; calUi(true); seekTo(0); playBoth();
+    calMsg('Écoute. Dès que la musique commence, tape sur le gros bouton au 1er temps fort de la 1re mesure où l\'on entend de la musique (pas pendant les mesures de silence), puis tape à CHAQUE temps de battue. Au moins 8 taps, puis appuie sur « Terminer ».');
+  });
   $('#tap').addEventListener('pointerdown', (e) => {
     e.preventDefault();
-    if (audio.paused) { playBoth(); return; }
-    if (!tapping) { tapping = true; taps = []; $('#tap').classList.add('rec'); }
     taps.push(audio.currentTime - beatCfg.lat);
-    $('#tap').textContent = `${taps.length} tap${taps.length > 1 ? 's' : ''} — continue ; arrête-toi 2 s pour valider (≥ 6)`;
-    if (taps.length >= 8 || false) { /* assez : l'utilisateur peut continuer */ }
+    calMsg(`${taps.length} tap${taps.length > 1 ? 's' : ''}. Continue à chaque temps${taps.length >= 8 ? ', puis appuie sur « Terminer »' : ' (au moins 8)'}.`);
   });
-  $('#tap').addEventListener('click', (e) => {
-    // clic clavier/souris sans pointer : ignoré ; la validation se fait via double-pression longue ci-dessous
-  });
-  function finishTap() {
-    if (taps.length < 4) { tapping = false; taps = []; $('#tap').classList.remove('rec'); $('#tap').textContent = 'Taper le tempo : lance l\'audio, tape chaque temps (1er tap = temps fort)'; return; }
-    const n = taps.length; let sx = 0, sy = 0, sxx = 0, sxy = 0;
+  $('#calCancel').addEventListener('click', () => { calUi(false); taps = []; idleMsg(); });
+  $('#calDone').addEventListener('click', () => {
+    if (taps.length < 6) { calMsg(`Seulement ${taps.length} tap${taps.length > 1 ? 's' : ''} : il en faut au moins 6. Continue de taper, ou « Annuler ».`); return; }
     // écarte les doubles taps (< 40 % du pas médian)
     const d = taps.slice(1).map((v, i) => v - taps[i]).sort((x, y) => x - y); const med = d[d.length >> 1];
     const clean = taps.filter((v, i) => i === 0 || v - taps[i - 1] > med * 0.4);
     const m = clean.length;
-    // index entier le plus proche pour chaque tap (tolère les temps sautés)
+    // index entier le plus proche pour chaque tap (tolère un temps sauté), puis droite des moindres carrés
     const idx = clean.map((v) => Math.round((v - clean[0]) / med));
+    let sx = 0, sy = 0, sxx = 0, sxy = 0;
     for (let i = 0; i < m; i++) { sx += idx[i]; sy += clean[i]; sxx += idx[i] * idx[i]; sxy += idx[i] * clean[i]; }
     const slope = (m * sxy - sx * sy) / (m * sxx - sx * sx), icpt = (sy - slope * sx) / m;
     beatCfg.bpm = Math.round(600 / slope) / 10; beatCfg.deb = Math.max(0, Math.round(icpt * 100) / 100);
     $('#btBpm').value = beatCfg.bpm; $('#btDeb').value = beatCfg.deb;
-    tapping = false; taps = []; $('#tap').classList.remove('rec'); $('#tap').textContent = 'Taper le tempo : lance l\'audio, tape chaque temps (1er tap = temps fort)';
-    saveBeat(); drawBeat(true);
-  }
-  // validation : on arrête le tap dès que l'utilisateur met en pause, ou sur le bouton « Tempo » pendant la capture
-  audio.addEventListener('pause', () => { if (tapping) finishTap(); });
-  setInterval(() => { if (tapping && taps.length >= 6 && audio.currentTime - taps[taps.length - 1] > 2.5) finishTap(); }, 500);
+    calUi(false); taps = []; saveBeat(); drawBeat(true);
+    seekTo(0); playBoth(); idleMsg();
+  });
 
   // --- piano + voix : deux pistes, deux volumes (Web Audio pour que ça marche aussi sur iPhone) ---
   let actx = null, gP = null, gV = null;
