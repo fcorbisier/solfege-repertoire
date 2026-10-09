@@ -101,6 +101,10 @@ input[type=range] { flex: 1; accent-color: var(--accent); height: 28px; }
 .opts .btn { padding: 6px 10px; }
 .opts .btn[aria-pressed=true] { background: var(--accent); color: var(--accent-ink); }
 select.btn { appearance: auto; }
+.mix { display: grid; grid-template-columns: auto 1fr auto; gap: 2px 10px; align-items: center; margin: 6px 0 2px; font-size: .85rem; }
+.mix label { color: var(--muted); }
+.mix output { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 3.2em; text-align: right; }
+.mix[hidden] { display: none; }
 #ab { font-size: .75rem; color: var(--muted); min-width: 4.5em; text-align: right; }
 @media (max-width: 420px) { .ctrl { justify-content: center; } .opts { justify-content: center; } }
 </style>
@@ -123,6 +127,10 @@ select.btn { appearance: auto; }
       <input type="range" id="seek" min="0" max="1" step="0.1" value="0" aria-label="Position">
       <span id="tot">0:00</span>
     </div>
+    <div class="mix" id="mix">
+      <label for="vp">Piano</label><input type="range" id="vp" min="0" max="150" step="5" value="100" aria-label="Volume du piano"><output id="vpo">100 %</output>
+      <label for="vv">Voix</label><input type="range" id="vv" min="0" max="150" step="5" value="40" aria-label="Volume de la voix"><output id="vvo">40 %</output>
+    </div>
     <div class="ctrl">
       <div class="main">
         <button class="ib" id="prev" type="button" aria-label="Piste précédente"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
@@ -141,6 +149,7 @@ select.btn { appearance: auto; }
     </div>
   </div>
   <audio id="audio" preload="metadata"></audio>
+  <audio id="voice" preload="metadata"></audio>
 </div>
 
 <script>
@@ -148,7 +157,7 @@ select.btn { appearance: auto; }
   const $ = (s) => document.querySelector(s);
   const PLAY = '<svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg>';
   const PAUSE = '<svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>';
-  const CACHE = 'audio-v1';
+  const CACHE = 'audio-v2';
   const fmt = (s) => { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
   const store = {
     get(k, d) { try { return localStorage.getItem(k) ?? d; } catch { return d; } },
@@ -156,8 +165,12 @@ select.btn { appearance: auto; }
   };
 
   const audio = $('#audio');
+  const voice = $('#voice');
+  let loopOn = false;
   let data, tracks = [], cur = -1, a = null, b = null, dragging = false;
   const cachedSet = new Set();
+  const files = (t) => [t.piano, t.voix].filter(Boolean);
+  const isCached = (t) => files(t).every((f) => cachedSet.has(f));
 
   async function init() {
     try {
@@ -187,7 +200,7 @@ select.btn { appearance: auto; }
   function updateOfflineBtn() {
     const btn = $('#offline');
     if (!('caches' in window) || !tracks.length) { if (!('caches' in window)) btn.hidden = true; return; }
-    const n = tracks.filter((t) => cachedSet.has(t.fichier)).length;
+    const n = tracks.filter(isCached).length;
     btn.textContent = n === tracks.length ? 'Disponible hors ligne ✓' : `Télécharger pour hors ligne (${n}/${tracks.length})`;
     btn.disabled = n === tracks.length;
   }
@@ -202,7 +215,7 @@ select.btn { appearance: auto; }
   function addTrack(ul, t, chipText) {
     const li = el('li');
     const btn = el('button', 'track'); btn.type = 'button'; btn.dataset.i = t.idx;
-    if (cachedSet.has(t.fichier)) btn.classList.add('cached');
+    if (isCached(t)) btn.classList.add('cached');
     const ico = el('span', 'ico'); ico.innerHTML = PLAY;
     const lbl = el('span', 'lbl', t.label);
     if (chipText) lbl.append(el('span', 'chip', chipText));
@@ -259,14 +272,18 @@ select.btn { appearance: auto; }
   function load(i, autoplay = true) {
     const t = tracks[i]; if (!t) return;
     cur = i; a = b = null; updateAB();
-    audio.src = t.fichier; audio.playbackRate = parseFloat($('#rate').value);
+    voice.pause();
+    audio.src = t.piano; audio.playbackRate = parseFloat($('#rate').value);
+    if (t.voix) { voice.src = t.voix; voice.playbackRate = audio.playbackRate; }
+    else { voice.removeAttribute('src'); voice.load(); }
+    $('#mix').hidden = !t.voix;
     $('#player').hidden = false;
     $('#npt').textContent = t.exo; $('#nps').textContent = t.label;
     $('#seek').value = 0; $('#cur').textContent = '0:00'; $('#tot').textContent = fmt(t.duree);
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({ title: `${t.exo} — ${t.label}`, artist: 'Solfège' });
     }
-    if (autoplay) audio.play().catch(() => {});
+    if (autoplay) playBoth();
     highlight();
   }
 
@@ -282,52 +299,97 @@ select.btn { appearance: auto; }
   $('#list').addEventListener('click', (e) => {
     const btn = e.target.closest('.track'); if (!btn) return;
     const i = +btn.dataset.i;
-    if (i === cur) { audio.paused ? audio.play() : audio.pause(); } else load(i);
+    if (i === cur) toggle(); else load(i);
   });
   $('#q').addEventListener('input', render);
-  $('#pp').addEventListener('click', () => { if (cur < 0) return; audio.paused ? audio.play() : audio.pause(); });
-  $('#prev').addEventListener('click', () => { if (audio.currentTime > 3) audio.currentTime = 0; else step(-1); });
+  $('#pp').addEventListener('click', () => { if (cur < 0) return; toggle(); });
+  $('#prev').addEventListener('click', () => { if (audio.currentTime > 3) seekTo(0); else step(-1); });
   $('#next').addEventListener('click', () => step(1));
-  $('#rate').addEventListener('change', (e) => { audio.playbackRate = parseFloat(e.target.value); store.set('rate', e.target.value); });
+  $('#rate').addEventListener('change', (e) => { audio.playbackRate = voice.playbackRate = parseFloat(e.target.value); store.set('rate', e.target.value); });
   $('#loop').addEventListener('click', (e) => {
     const on = e.currentTarget.getAttribute('aria-pressed') !== 'true';
-    e.currentTarget.setAttribute('aria-pressed', on); audio.loop = on;
+    e.currentTarget.setAttribute('aria-pressed', on); loopOn = on;
   });
   $('#abbtn').addEventListener('click', () => {
     if (a == null) a = audio.currentTime;
-    else if (b == null) { b = audio.currentTime; if (b <= a + 0.2) { a = b = null; } else { audio.currentTime = a; } }
+    else if (b == null) { b = audio.currentTime; if (b <= a + 0.2) { a = b = null; } else { seekTo(a); } }
     else { a = b = null; }
     updateAB();
   });
 
   const seek = $('#seek');
   seek.addEventListener('input', () => { dragging = true; $('#cur').textContent = fmt(seek.value); });
-  seek.addEventListener('change', () => { audio.currentTime = parseFloat(seek.value); dragging = false; });
+  seek.addEventListener('change', () => { seekTo(parseFloat(seek.value)); dragging = false; });
 
   audio.addEventListener('loadedmetadata', () => { seek.max = audio.duration; $('#tot').textContent = fmt(audio.duration); });
   audio.addEventListener('play', () => { $('#pp').innerHTML = PAUSE; tick(); });
-  audio.addEventListener('pause', () => { $('#pp').innerHTML = PLAY; });
-  audio.addEventListener('ended', () => { $('#pp').innerHTML = PLAY; });
+  audio.addEventListener('pause', () => { $('#pp').innerHTML = PLAY; voice.pause(); });
+  audio.addEventListener('ended', () => {
+    if (loopOn) { seekTo(0); playBoth(); return; }
+    $('#pp').innerHTML = PLAY; voice.pause();
+  });
   audio.addEventListener('timeupdate', () => {
     if (!dragging) { seek.value = audio.currentTime; $('#cur').textContent = fmt(audio.currentTime); }
+    resync();
   });
+  // la voix suit le piano (piste maîtresse) : recale si l'écart dépasse 60 ms
+  function resync() {
+    if (hasVoice() && !audio.paused && Math.abs(voice.currentTime - audio.currentTime) > 0.06) voice.currentTime = audio.currentTime;
+  }
   // boucle A–B précise (timeupdate est trop lent pour ça)
   function tick() {
-    if (b != null && audio.currentTime >= b) audio.currentTime = a;
+    if (b != null && audio.currentTime >= b) seekTo(a); else resync();
     if (!audio.paused) requestAnimationFrame(tick);
   }
+
+  // --- piano + voix : deux pistes, deux volumes (Web Audio pour que ça marche aussi sur iPhone) ---
+  let actx = null, gP = null, gV = null;
+  const hasVoice = () => !!(tracks[cur] && tracks[cur].voix);
+  function setupGraph() {
+    if (actx || !(window.AudioContext || window.webkitAudioContext)) return;
+    try {
+      actx = new (window.AudioContext || window.webkitAudioContext)();
+      const sP = actx.createMediaElementSource(audio);
+      const sV = actx.createMediaElementSource(voice);
+      gP = actx.createGain(); gV = actx.createGain();
+      const lim = actx.createDynamicsCompressor();   // limiteur : évite la saturation si on pousse les deux curseurs
+      lim.threshold.value = -3; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = 0.003; lim.release.value = 0.15;
+      sP.connect(gP).connect(lim); sV.connect(gV).connect(lim); lim.connect(actx.destination);
+      applyVol();
+    } catch { actx = gP = gV = null; }
+  }
+  function applyVol() {
+    const p = $('#vp').value / 100, v = $('#vv').value / 100;
+    $('#vpo').textContent = $('#vp').value + ' %'; $('#vvo').textContent = $('#vv').value + ' %';
+    if (gP) { gP.gain.value = p; gV.gain.value = v; audio.volume = 1; voice.volume = 1; }
+    else { audio.volume = Math.min(1, p); voice.volume = Math.min(1, v); }
+  }
+  function playBoth() {
+    setupGraph();
+    if (actx && actx.state === 'suspended') actx.resume();
+    voice.currentTime = audio.currentTime;
+    audio.play().catch(() => {});
+    if (hasVoice()) voice.play().catch(() => {});
+  }
+  function toggle() { if (audio.paused) playBoth(); else { audio.pause(); voice.pause(); } }
+  function seekTo(t) { audio.currentTime = t; if (hasVoice()) voice.currentTime = t; }
+  for (const [id, key] of [['#vp', 'vol-piano'], ['#vv', 'vol-voix']]) {
+    $(id).value = store.get(key, $(id).value);
+    $(id).addEventListener('input', () => { applyVol(); store.set(key, $(id).value); });
+  }
+  applyVol();
   $('#pp').innerHTML = PLAY;
 
   document.addEventListener('keydown', (e) => {
     if (e.target.matches('input, select')) return;
-    if (e.code === 'Space' && cur >= 0) { e.preventDefault(); audio.paused ? audio.play() : audio.pause(); }
-    if (e.code === 'ArrowLeft') audio.currentTime = Math.max(0, audio.currentTime - 5);
-    if (e.code === 'ArrowRight') audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 5);
+    if (e.code === 'Space' && cur >= 0) { e.preventDefault(); toggle(); }
+    if (e.code === 'ArrowLeft') seekTo(Math.max(0, audio.currentTime - 5));
+    if (e.code === 'ArrowRight') seekTo(Math.min(audio.duration || 0, audio.currentTime + 5));
   });
 
   if ('mediaSession' in navigator) {
-    navigator.mediaSession.setActionHandler('play', () => audio.play());
-    navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+    navigator.mediaSession.setActionHandler('play', () => playBoth());
+    navigator.mediaSession.setActionHandler('pause', () => { audio.pause(); voice.pause(); });
     navigator.mediaSession.setActionHandler('previoustrack', () => step(-1));
     navigator.mediaSession.setActionHandler('nexttrack', () => step(1));
   }
@@ -337,12 +399,12 @@ select.btn { appearance: auto; }
     const btn = $('#offline'); btn.disabled = true;
     try {
       const c = await caches.open(CACHE);
-      const todo = tracks.filter((t) => !cachedSet.has(t.fichier));
+      const todo = tracks.filter((t) => !isCached(t));
       let done = tracks.length - todo.length;
       for (const t of todo) {
         btn.textContent = `Téléchargement… ${done}/${tracks.length}`;
-        await c.add(new Request(t.fichier));
-        cachedSet.add(t.fichier); done++;
+        for (const f of files(t)) if (!cachedSet.has(f)) { await c.add(new Request(f)); cachedSet.add(f); }
+        done++;
       }
     } catch {
       btn.textContent = 'Échec — réessayer'; btn.disabled = false; return;

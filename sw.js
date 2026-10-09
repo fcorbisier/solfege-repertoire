@@ -1,6 +1,6 @@
 // Service worker : shell de l'appli + audio mis en cache à la demande (bouton « Hors ligne »).
-const SHELL_CACHE = 'shell-v1';
-const AUDIO_CACHE = 'audio-v1'; // jamais purgé automatiquement : les enregistrements restent hors ligne
+const SHELL_CACHE = 'shell-v2';
+const AUDIO_CACHE = 'audio-v2'; // jamais purgé automatiquement : les enregistrements restent hors ligne
 const SHELL = ['./', 'index.html', 'morceaux.json', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', (e) => {

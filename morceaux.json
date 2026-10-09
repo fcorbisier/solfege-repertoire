@@ -8,8 +8,9 @@
         {
           "label": "2ᵉ ligne",
           "role": "lecture",
-          "fichier": "audio/2c-2eme-ligne.m4a",
-          "duree": 39
+          "duree": 39,
+          "piano": "audio/2c-2eme-ligne.piano.m4a",
+          "voix": "audio/2c-2eme-ligne.voix.m4a"
         }
       ],
       "lecon": 2
@@ -21,8 +22,9 @@
         {
           "label": "« Encore pire »",
           "role": "lecture",
-          "fichier": "audio/2e-encore-pire.m4a",
-          "duree": 27
+          "duree": 27,
+          "piano": "audio/2e-encore-pire.piano.m4a",
+          "voix": "audio/2e-encore-pire.voix.m4a"
         }
       ],
       "lecon": 2
@@ -34,8 +36,9 @@
         {
           "label": "Lecture",
           "role": "lecture",
-          "fichier": "audio/2f.m4a",
-          "duree": 73
+          "duree": 73,
+          "piano": "audio/2f.piano.m4a",
+          "voix": "audio/2f.voix.m4a"
         }
       ],
       "lecon": 2
@@ -47,14 +50,16 @@
         {
           "label": "Lecture",
           "role": "lecture",
-          "fichier": "audio/3b.m4a",
-          "duree": 45
+          "duree": 45,
+          "piano": "audio/3b.piano.m4a",
+          "voix": "audio/3b.voix.m4a"
         },
         {
           "label": "Accompagnement",
           "role": "accompagnement",
-          "fichier": "audio/3b-accompagnement.m4a",
-          "duree": 97
+          "duree": 97,
+          "piano": "audio/3b-accompagnement.piano.m4a",
+          "voix": "audio/3b-accompagnement.voix.m4a"
         }
       ],
       "lecon": 3
@@ -66,8 +71,9 @@
         {
           "label": "Lecture",
           "role": "lecture",
-          "fichier": "audio/3c.m4a",
-          "duree": 48
+          "duree": 48,
+          "piano": "audio/3c.piano.m4a",
+          "voix": "audio/3c.voix.m4a"
         }
       ],
       "lecon": 3
@@ -79,8 +85,9 @@
         {
           "label": "Lecture",
           "role": "lecture",
-          "fichier": "audio/3d.m4a",
-          "duree": 96
+          "duree": 96,
+          "piano": "audio/3d.piano.m4a",
+          "voix": "audio/3d.voix.m4a"
         }
       ],
       "lecon": 3
@@ -92,14 +99,15 @@
         {
           "label": "Lecture",
           "role": "lecture",
-          "fichier": "audio/3e.m4a",
-          "duree": 28
+          "duree": 28,
+          "piano": "audio/3e.piano.m4a",
+          "voix": "audio/3e.voix.m4a"
         },
         {
           "label": "Accompagnement",
           "role": "accompagnement",
-          "fichier": "audio/3e-accompagnement.m4a",
-          "duree": 29
+          "duree": 29,
+          "piano": "audio/3e-accompagnement.piano.m4a"
         }
       ],
       "lecon": 3
@@ -111,14 +119,16 @@
         {
           "label": "Lecture",
           "role": "lecture",
-          "fichier": "audio/4a.m4a",
-          "duree": 49
+          "duree": 49,
+          "piano": "audio/4a.piano.m4a",
+          "voix": "audio/4a.voix.m4a"
         },
         {
           "label": "En sol mineur",
           "role": "variante",
-          "fichier": "audio/4a-sol-mineur.m4a",
-          "duree": 42
+          "duree": 42,
+          "piano": "audio/4a-sol-mineur.piano.m4a",
+          "voix": "audio/4a-sol-mineur.voix.m4a"
         }
       ],
       "lecon": 4
@@ -130,14 +140,16 @@
         {
           "label": "Lecture",
           "role": "lecture",
-          "fichier": "audio/4b.m4a",
-          "duree": 61
+          "duree": 61,
+          "piano": "audio/4b.piano.m4a",
+          "voix": "audio/4b.voix.m4a"
         },
         {
           "label": "Accompagnement (piano seul)",
           "role": "accompagnement",
-          "fichier": "audio/4b-accompagnement-piano.m4a",
-          "duree": 60
+          "duree": 60,
+          "piano": "audio/4b-accompagnement-piano.piano.m4a",
+          "voix": "audio/4b-accompagnement-piano.voix.m4a"
         }
       ],
       "lecon": 4
@@ -149,8 +161,9 @@
         {
           "label": "Lecture",
           "role": "lecture",
-          "fichier": "audio/4c.m4a",
-          "duree": 75
+          "duree": 75,
+          "piano": "audio/4c.piano.m4a",
+          "voix": "audio/4c.voix.m4a"
         }
       ],
       "lecon": 4
@@ -162,8 +175,9 @@
         {
           "label": "Lecture",
           "role": "lecture",
-          "fichier": "audio/5a.m4a",
-          "duree": 60
+          "duree": 60,
+          "piano": "audio/5a.piano.m4a",
+          "voix": "audio/5a.voix.m4a"
         }
       ],
       "lecon": 5
@@ -175,8 +189,9 @@
         {
           "label": "Lecture",
           "role": "lecture",
-          "fichier": "audio/5b.m4a",
-          "duree": 68
+          "duree": 68,
+          "piano": "audio/5b.piano.m4a",
+          "voix": "audio/5b.voix.m4a"
         }
       ],
       "lecon": 5
@@ -188,8 +203,9 @@
         {
           "label": "Lecture",
           "role": "lecture",
-          "fichier": "audio/6a.m4a",
-          "duree": 39
+          "duree": 39,
+          "piano": "audio/6a.piano.m4a",
+          "voix": "audio/6a.voix.m4a"
         }
       ],
       "lecon": 6
@@ -201,14 +217,16 @@
         {
           "label": "Lecture",
           "role": "lecture",
-          "fichier": "audio/6b.m4a",
-          "duree": 41
+          "duree": 41,
+          "piano": "audio/6b.piano.m4a",
+          "voix": "audio/6b.voix.m4a"
         },
         {
           "label": "« On s'accroche pour la fin »",
           "role": "variante",
-          "fichier": "audio/6b-on-saccroche.m4a",
-          "duree": 42
+          "duree": 42,
+          "piano": "audio/6b-on-saccroche.piano.m4a",
+          "voix": "audio/6b-on-saccroche.voix.m4a"
         }
       ],
       "lecon": 6
@@ -220,8 +238,9 @@
         {
           "label": "Lecture",
           "role": "lecture",
-          "fichier": "audio/6c.m4a",
-          "duree": 48
+          "duree": 48,
+          "piano": "audio/6c.piano.m4a",
+          "voix": "audio/6c.voix.m4a"
         }
       ],
       "lecon": 6
@@ -233,26 +252,29 @@
         {
           "label": "Lecture",
           "role": "lecture",
-          "fichier": "audio/7a.m4a",
-          "duree": 85
+          "duree": 85,
+          "piano": "audio/7a.piano.m4a"
         },
         {
           "label": "Version difficile",
           "role": "variante",
-          "fichier": "audio/7a-difficile.m4a",
-          "duree": 77
+          "duree": 77,
+          "piano": "audio/7a-difficile.piano.m4a",
+          "voix": "audio/7a-difficile.voix.m4a"
         },
         {
           "label": "Accompagnement",
           "role": "accompagnement",
-          "fichier": "audio/7a-accompagnement.m4a",
-          "duree": 82
+          "duree": 82,
+          "piano": "audio/7a-accompagnement.piano.m4a",
+          "voix": "audio/7a-accompagnement.voix.m4a"
         },
         {
           "label": "Accompagnement (difficile)",
           "role": "accompagnement",
-          "fichier": "audio/7a-accompagnement-difficile.m4a",
-          "duree": 73
+          "duree": 73,
+          "piano": "audio/7a-accompagnement-difficile.piano.m4a",
+          "voix": "audio/7a-accompagnement-difficile.voix.m4a"
         }
       ],
       "lecon": 7
@@ -264,14 +286,16 @@
         {
           "label": "Lecture",
           "role": "lecture",
-          "fichier": "audio/7b.m4a",
-          "duree": 50
+          "duree": 50,
+          "piano": "audio/7b.piano.m4a",
+          "voix": "audio/7b.voix.m4a"
         },
         {
           "label": "Accompagnement",
           "role": "accompagnement",
-          "fichier": "audio/7b-accompagnement.m4a",
-          "duree": 91
+          "duree": 91,
+          "piano": "audio/7b-accompagnement.piano.m4a",
+          "voix": "audio/7b-accompagnement.voix.m4a"
         }
       ],
       "lecon": 7
@@ -283,14 +307,16 @@
         {
           "label": "Lecture",
           "role": "lecture",
-          "fichier": "audio/7c.m4a",
-          "duree": 44
+          "duree": 44,
+          "piano": "audio/7c.piano.m4a",
+          "voix": "audio/7c.voix.m4a"
         },
         {
           "label": "Accompagnement",
           "role": "accompagnement",
-          "fichier": "audio/7c-accompagnement.m4a",
-          "duree": 67
+          "duree": 67,
+          "piano": "audio/7c-accompagnement.piano.m4a",
+          "voix": "audio/7c-accompagnement.voix.m4a"
         }
       ],
       "lecon": 7
@@ -302,8 +328,9 @@
         {
           "label": "Lecture",
           "role": "lecture",
-          "fichier": "audio/8a.m4a",
-          "duree": 102
+          "duree": 102,
+          "piano": "audio/8a.piano.m4a",
+          "voix": "audio/8a.voix.m4a"
         }
       ],
       "lecon": 8
@@ -315,86 +342,99 @@
       {
         "label": "Enregistrement du 09/09 à 18h36",
         "role": "autre",
-        "fichier": "audio/autre-01.m4a",
-        "duree": 107
+        "duree": 107,
+        "piano": "audio/autre-01.piano.m4a",
+        "voix": "audio/autre-01.voix.m4a"
       },
       {
         "label": "Enregistrement du 09/09 à 18h49",
         "role": "autre",
-        "fichier": "audio/autre-02.m4a",
-        "duree": 24
+        "duree": 24,
+        "piano": "audio/autre-02.piano.m4a",
+        "voix": "audio/autre-02.voix.m4a"
       },
       {
         "label": "Enregistrement du 09/09 à 19h11",
         "role": "autre",
-        "fichier": "audio/autre-03.m4a",
-        "duree": 27
+        "duree": 27,
+        "piano": "audio/autre-03.piano.m4a",
+        "voix": "audio/autre-03.voix.m4a"
       },
       {
         "label": "Enregistrement du 09/09 à 19h30",
         "role": "autre",
-        "fichier": "audio/autre-04.m4a",
-        "duree": 105
+        "duree": 105,
+        "piano": "audio/autre-04.piano.m4a",
+        "voix": "audio/autre-04.voix.m4a"
       },
       {
         "label": "Enregistrement du 10/09 à 07h27",
         "role": "autre",
-        "fichier": "audio/autre-05.m4a",
-        "duree": 39
+        "duree": 39,
+        "piano": "audio/autre-05.piano.m4a",
+        "voix": "audio/autre-05.voix.m4a"
       },
       {
         "label": "Enregistrement du 10/09 à 18h22",
         "role": "autre",
-        "fichier": "audio/autre-06.m4a",
-        "duree": 52
+        "duree": 52,
+        "piano": "audio/autre-06.piano.m4a",
+        "voix": "audio/autre-06.voix.m4a"
       },
       {
         "label": "Enregistrement du 11/09 à 15h35",
         "role": "autre",
-        "fichier": "audio/autre-07.m4a",
-        "duree": 67
+        "duree": 67,
+        "piano": "audio/autre-07.piano.m4a",
+        "voix": "audio/autre-07.voix.m4a"
       },
       {
         "label": "Enregistrement du 11/09 à 15h36",
         "role": "autre",
-        "fichier": "audio/autre-08.m4a",
-        "duree": 57
+        "duree": 57,
+        "piano": "audio/autre-08.piano.m4a"
       },
       {
         "label": "Enregistrement du 16/09 à 18h32",
         "role": "autre",
-        "fichier": "audio/autre-09.m4a",
-        "duree": 150
+        "duree": 150,
+        "piano": "audio/autre-09.piano.m4a",
+        "voix": "audio/autre-09.voix.m4a"
       },
       {
         "label": "Enregistrement du 16/09 à 18h32",
         "role": "autre",
-        "fichier": "audio/autre-10.m4a",
-        "duree": 56
+        "duree": 56,
+        "piano": "audio/autre-10.piano.m4a",
+        "voix": "audio/autre-10.voix.m4a"
       },
       {
         "label": "Enregistrement du 16/09 à 18h32",
         "role": "autre",
-        "fichier": "audio/autre-11.m4a",
-        "duree": 257
+        "duree": 257,
+        "piano": "audio/autre-11.piano.m4a",
+        "voix": "audio/autre-11.voix.m4a"
       },
       {
         "label": "Enregistrement du 16/09 à 18h32",
         "role": "autre",
-        "fichier": "audio/autre-12.m4a",
-        "duree": 26
+        "duree": 26,
+        "piano": "audio/autre-12.piano.m4a",
+        "voix": "audio/autre-12.voix.m4a"
       },
       {
         "label": "Nouvel enregistrement 170",
         "role": "autre",
-        "fichier": "audio/autre-13.m4a",
-        "duree": 45
+        "duree": 45,
+        "piano": "audio/autre-13.piano.m4a",
+        "voix": "audio/autre-13.voix.m4a"
       },
       {
         "label": "Battue syncope",
         "role": "autre",
-        "fichier": "audio/autre-14.m4a",
-        "duree": 22
+        "duree": 22,
+        "piano": "audio/autre-14.piano.m4a",
+        "voix": "audio/autre-14.voix.m4a"
       }
     ]
   }
