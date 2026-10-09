@@ -44,6 +44,14 @@
           "piano": "audio/audio_2c-2eme-ligne.piano.m4a",
           "voix": "audio/audio_2c-2eme-ligne.voix.m4a",
           "original": "audio/audio_2c-2eme-ligne.m4a"
+        },
+        {
+          "label": "Enregistrement 2 (1 min 47)",
+          "role": "variante",
+          "duree": 107,
+          "piano": "audio/audio_autre-01.piano.m4a",
+          "voix": "audio/audio_autre-01.voix.m4a",
+          "original": "audio/audio_autre-01.m4a"
         }
       ],
       "lecon": 2,
@@ -76,6 +84,14 @@
           "piano": "audio/audio_2e-encore-pire.piano.m4a",
           "voix": "audio/audio_2e-encore-pire.voix.m4a",
           "original": "audio/audio_2e-encore-pire.m4a"
+        },
+        {
+          "label": "Enregistrement 2",
+          "role": "variante",
+          "duree": 27,
+          "piano": "audio/audio_autre-03.piano.m4a",
+          "voix": "audio/audio_autre-03.voix.m4a",
+          "original": "audio/audio_autre-03.m4a"
         }
       ],
       "lecon": 2,
@@ -92,6 +108,14 @@
           "piano": "audio/audio_2f.piano.m4a",
           "voix": "audio/audio_2f.voix.m4a",
           "original": "audio/audio_2f.m4a"
+        },
+        {
+          "label": "Enregistrement 2",
+          "role": "variante",
+          "duree": 105,
+          "piano": "audio/audio_autre-04.piano.m4a",
+          "voix": "audio/audio_autre-04.voix.m4a",
+          "original": "audio/audio_autre-04.m4a"
         }
       ],
       "lecon": 2,
@@ -476,6 +500,14 @@
           "piano": "audio/audio_8a.piano.m4a",
           "voix": "audio/audio_8a.voix.m4a",
           "original": "audio/audio_8a.m4a"
+        },
+        {
+          "label": "Battue syncope",
+          "role": "variante",
+          "duree": 22,
+          "piano": "audio/audio_autre-14.piano.m4a",
+          "voix": "audio/audio_autre-14.voix.m4a",
+          "original": "audio/audio_autre-14.m4a"
         }
       ],
       "lecon": 8,
@@ -486,51 +518,12 @@
     "titre": "Autres enregistrements",
     "pistes": [
       {
-        "label": "Enregistrement du 09/09 à 18h36",
-        "role": "autre",
-        "duree": 107,
-        "piano": "audio/audio_autre-01.piano.m4a",
-        "voix": "audio/audio_autre-01.voix.m4a",
-        "original": "audio/audio_autre-01.m4a"
-      },
-      {
         "label": "Rythmique n°2 p. 40 (09/09, 18h49)",
         "role": "autre",
         "duree": 24,
         "piano": "audio/audio_autre-02.piano.m4a",
         "voix": "audio/audio_autre-02.voix.m4a",
         "original": "audio/audio_autre-02.m4a"
-      },
-      {
-        "label": "Enregistrement du 09/09 à 19h11",
-        "role": "autre",
-        "duree": 27,
-        "piano": "audio/audio_autre-03.piano.m4a",
-        "voix": "audio/audio_autre-03.voix.m4a",
-        "original": "audio/audio_autre-03.m4a"
-      },
-      {
-        "label": "Enregistrement du 09/09 à 19h30",
-        "role": "autre",
-        "duree": 105,
-        "piano": "audio/audio_autre-04.piano.m4a",
-        "voix": "audio/audio_autre-04.voix.m4a",
-        "original": "audio/audio_autre-04.m4a"
-      },
-      {
-        "label": "Enregistrement du 11/09 à 15h36",
-        "role": "autre",
-        "duree": 57,
-        "piano": "audio/audio_autre-08.piano.m4a",
-        "original": "audio/audio_autre-08.m4a"
-      },
-      {
-        "label": "Battue syncope",
-        "role": "autre",
-        "duree": 22,
-        "piano": "audio/audio_autre-14.piano.m4a",
-        "voix": "audio/audio_autre-14.voix.m4a",
-        "original": "audio/audio_autre-14.m4a"
       }
     ]
   }
