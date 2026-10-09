@@ -1,6 +1,6 @@
 # Répertoire de solfège
 
-Site statique (PWA) : liste des exercices, lecteur audio à **deux pistes (piano / voix) avec un volume réglable pour chacune**, vitesse ×0,5 à ×1,25, boucle, boucle A–B, mode hors ligne.
+Site statique (PWA) : liste des exercices, lecteur audio avec le choix entre l'**enregistrement d'origine** et la version à **deux pistes (piano / voix) avec un volume réglable pour chacune**, vitesse ×0,5 à ×1,25, boucle, boucle A–B, mode hors ligne.
 Aucune dépendance, aucun build.
 
 ## Contenu
@@ -9,7 +9,7 @@ Aucune dépendance, aucun build.
 |---|---|
 | `index.html` | La page et le lecteur |
 | `morceaux.json` | La liste des exercices et pistes (c'est le seul fichier à éditer pour ajouter/renommer) |
-| `audio/` | Pour chaque enregistrement : `xxx.piano.m4a` et `xxx.voix.m4a` (séparés par IA, mono AAC 96 kbps) |
+| `audio_*.m4a` | Les enregistrements, **tous dans le même dossier que la page, préfixés `audio_`** : `audio_xxx.m4a` (original, sans perte) + `audio_xxx.piano.m4a` et `audio_xxx.voix.m4a` (séparés par IA, mono AAC 96 kbps) |
 | `sw.js`, `manifest.webmanifest`, `icon*` | Installation sur l'écran d'accueil + hors ligne |
 
 ## Mise en ligne privée (gratuit)
@@ -21,7 +21,7 @@ Aucune dépendance, aucun build.
    Domaine : celui du projet Pages (`xxx.pages.dev`). Règle *Allow* → *Emails* → ton adresse.
    Connexion par code à usage unique reçu par e-mail.
 4. Ouvrir l'adresse sur le téléphone, se connecter, puis « Ajouter à l'écran d'accueil ».
-   Appuyer sur **Télécharger pour hors ligne** pour garder les enregistrements (piano + voix) sur l'appareil, environ 70 Mo.
+   Appuyer sur **Télécharger pour hors ligne** pour garder les enregistrements (piano + voix) sur l'appareil, environ 105 Mo (original + piano + voix).
 
 Pour que les fichiers audio soient protégés aussi, l'application Access doit couvrir tout le domaine (pas seulement la page d'accueil).
 
@@ -30,12 +30,12 @@ Pour que les fichiers audio soient protégés aussi, l'application Access doit c
 Dans `morceaux.json`, chaque exercice a une liste de `pistes` :
 
 ```json
-{ "label": "Lecture", "role": "lecture", "piano": "audio/3b.piano.m4a", "voix": "audio/3b.voix.m4a", "duree": 45 }
+{ "label": "Lecture", "role": "lecture", "original": "audio_3b.m4a", "piano": "audio_3b.piano.m4a", "voix": "audio_3b.voix.m4a", "duree": 45 }
 ```
 
 - `role` : `lecture`, `variante`, `accompagnement` ou `autre`.
 - `duree` en secondes (affichage uniquement ; le lecteur lit la vraie durée).
-- Pour ajouter un enregistrement : déposer le(s) fichier(s) dans `audio/` et ajouter une ligne. `voix` est facultatif : sans lui, le lecteur masque le curseur de voix et ne joue que `piano` (utile pour un enregistrement déjà sans voix).
+- Pour ajouter un enregistrement : déposer le(s) fichier(s) à côté de `index.html`, avec le préfixe `audio_` (le service worker s'en sert pour reconnaître les fichiers audio), et ajouter une ligne. `original` et `voix` sont facultatifs : sans `voix`, le lecteur masque le choix Original / Piano + voix et le curseur de voix, et ne joue que `piano` (utile pour un enregistrement déjà sans voix).
 - Les curseurs vont de 0 à 150 % (piano 100 %, voix 40 % au départ). Le réglage est mémorisé sur l'appareil.
 - Les enregistrements « Enregistrement du JJ/MM à HHhMM » (section *Autres*) ont des titres provisoires : renomme-les dans le JSON (`autres.pistes[].label`) ou déplace-les dans l'exercice correspondant.
 

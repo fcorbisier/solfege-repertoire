@@ -101,6 +101,10 @@ input[type=range] { flex: 1; accent-color: var(--accent); height: 28px; }
 .opts .btn { padding: 6px 10px; }
 .opts .btn[aria-pressed=true] { background: var(--accent); color: var(--accent-ink); }
 select.btn { appearance: auto; }
+.modes { display: flex; gap: 6px; margin: 6px 0 2px; }
+.modes[hidden] { display: none; }
+.modes .btn { flex: 1; padding: 6px 10px; }
+.modes .btn[aria-pressed=true] { background: var(--accent); color: var(--accent-ink); }
 .mix { display: grid; grid-template-columns: auto 1fr auto; gap: 2px 10px; align-items: center; margin: 6px 0 2px; font-size: .85rem; }
 .mix label { color: var(--muted); }
 .mix output { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 3.2em; text-align: right; }
@@ -126,6 +130,10 @@ select.btn { appearance: auto; }
       <span id="cur">0:00</span>
       <input type="range" id="seek" min="0" max="1" step="0.1" value="0" aria-label="Position">
       <span id="tot">0:00</span>
+    </div>
+    <div class="modes" id="modes" role="group" aria-label="Version de l'enregistrement">
+      <button class="btn" type="button" id="mOrig" aria-pressed="false">Original</button>
+      <button class="btn" type="button" id="mSplit" aria-pressed="true">Piano + voix (réglable)</button>
     </div>
     <div class="mix" id="mix">
       <label for="vp">Piano</label><input type="range" id="vp" min="0" max="150" step="5" value="100" aria-label="Volume du piano"><output id="vpo">100 %</output>
@@ -167,10 +175,12 @@ select.btn { appearance: auto; }
   const audio = $('#audio');
   const voice = $('#voice');
   let loopOn = false;
+  let mode = 'split';   // 'split' = piano + voix, 'original' = fichier d'origine
   let data, tracks = [], cur = -1, a = null, b = null, dragging = false;
   const cachedSet = new Set();
-  const files = (t) => [t.piano, t.voix].filter(Boolean);
-  const isCached = (t) => files(t).every((f) => cachedSet.has(f));
+  const files = (t) => [t.piano, t.voix, t.original].filter(Boolean);
+  const missing = new Set();   // fichiers introuvables : ignorés pour le hors ligne
+  const isCached = (t) => files(t).every((f) => cachedSet.has(f) || missing.has(f));
 
   async function init() {
     try {
@@ -182,6 +192,9 @@ select.btn { appearance: auto; }
     }
     await refreshCached();
     render();
+    mode = store.get('mode', 'split') === 'original' ? 'original' : 'split';
+    $('#mOrig').setAttribute('aria-pressed', mode === 'original');
+    $('#mSplit').setAttribute('aria-pressed', mode !== 'original');
     const rate = store.get('rate', '1');
     $('#rate').value = rate; audio.playbackRate = parseFloat(rate);
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
@@ -192,7 +205,7 @@ select.btn { appearance: auto; }
     if (!('caches' in window)) return;
     try {
       const c = await caches.open(CACHE);
-      for (const req of await c.keys()) cachedSet.add(new URL(req.url).pathname.replace(/^.*\/audio\//, 'audio/'));
+      for (const req of await c.keys()) cachedSet.add(new URL(req.url).pathname.replace(/^.*\/(audio_[^/]*)$/, '$1'));
     } catch {}
     updateOfflineBtn();
   }
@@ -272,11 +285,7 @@ select.btn { appearance: auto; }
   function load(i, autoplay = true) {
     const t = tracks[i]; if (!t) return;
     cur = i; a = b = null; updateAB();
-    voice.pause();
-    audio.src = t.piano; audio.playbackRate = parseFloat($('#rate').value);
-    if (t.voix) { voice.src = t.voix; voice.playbackRate = audio.playbackRate; }
-    else { voice.removeAttribute('src'); voice.load(); }
-    $('#mix').hidden = !t.voix;
+    setSources(t);
     $('#player').hidden = false;
     $('#npt').textContent = t.exo; $('#nps').textContent = t.label;
     $('#seek').value = 0; $('#cur').textContent = '0:00'; $('#tot').textContent = fmt(t.duree);
@@ -286,6 +295,39 @@ select.btn { appearance: auto; }
     if (autoplay) playBoth();
     highlight();
   }
+
+  const useOriginal = (t) => mode === 'original' && !!t.original;
+  const hasVoice = () => { const t = tracks[cur]; return !!(t && t.voix && !useOriginal(t)); };
+  function setSources(t) {
+    voice.pause();
+    audio.src = useOriginal(t) ? t.original : t.piano;
+    audio.playbackRate = parseFloat($('#rate').value);
+    if (t.voix && !useOriginal(t)) { voice.src = t.voix; voice.playbackRate = audio.playbackRate; }
+    else { voice.removeAttribute('src'); voice.load(); }
+    $('#modes').hidden = !t.voix;           // pas de choix si l'enregistrement n'a pas de voix séparée
+    $('#mix').hidden = !t.voix || useOriginal(t);
+    $('#mOrig').setAttribute('aria-pressed', useOriginal(t) && !!t.voix);
+    $('#mSplit').setAttribute('aria-pressed', !(useOriginal(t) && !!t.voix));
+  }
+  function setMode(m) {
+    if (mode === m) return;
+    mode = m; store.set('mode', m);
+    if (cur < 0) { $('#mOrig').setAttribute('aria-pressed', m === 'original'); $('#mSplit').setAttribute('aria-pressed', m !== 'original'); return; }
+    const t = tracks[cur], at = audio.currentTime, wasPlaying = !audio.paused;
+    setSources(t);
+    audio.addEventListener('loadedmetadata', function once() {
+      audio.removeEventListener('loadedmetadata', once);
+      audio.currentTime = at;
+      if (wasPlaying) playBoth();
+    });
+  }
+  $('#mOrig').addEventListener('click', () => setMode('original'));
+  $('#mSplit').addEventListener('click', () => setMode('split'));
+  // si l'original est introuvable, on revient aux pistes séparées
+  audio.addEventListener('error', () => {
+    const t = tracks[cur];
+    if (t && useOriginal(t)) { missing.add(t.original); t.original = null; mode = 'split'; setSources(t); playBoth(); }
+  });
 
   function step(d) { const n = cur + d; if (n >= 0 && n < tracks.length) load(n); }
 
@@ -344,7 +386,6 @@ select.btn { appearance: auto; }
 
   // --- piano + voix : deux pistes, deux volumes (Web Audio pour que ça marche aussi sur iPhone) ---
   let actx = null, gP = null, gV = null;
-  const hasVoice = () => !!(tracks[cur] && tracks[cur].voix);
   function setupGraph() {
     if (actx || !(window.AudioContext || window.webkitAudioContext)) return;
     try {
@@ -403,7 +444,11 @@ select.btn { appearance: auto; }
       let done = tracks.length - todo.length;
       for (const t of todo) {
         btn.textContent = `Téléchargement… ${done}/${tracks.length}`;
-        for (const f of files(t)) if (!cachedSet.has(f)) { await c.add(new Request(f)); cachedSet.add(f); }
+        for (const f of files(t)) {
+          if (cachedSet.has(f) || missing.has(f)) continue;
+          try { await c.add(new Request(f)); cachedSet.add(f); }
+          catch (err) { if (f === t.original) missing.add(f); else throw err; }
+        }
         done++;
       }
     } catch {

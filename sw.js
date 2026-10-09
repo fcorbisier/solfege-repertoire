@@ -47,7 +47,7 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;
 
-  if (url.pathname.includes('/audio/')) {
+  if (/\/audio_[^/]*$/.test(url.pathname)) {
     e.respondWith((async () => {
       const cached = await caches.match(req.url, { cacheName: AUDIO_CACHE });
       if (cached) return req.headers.has('range') ? rangeFromCache(req, cached) : cached;
