@@ -9,7 +9,7 @@ Aucune dépendance, aucun build.
 |---|---|
 | `index.html` | La page et le lecteur |
 | `morceaux.json` | La liste des exercices et pistes (c'est le seul fichier à éditer pour ajouter/renommer) |
-| `audio_*.m4a` | Les enregistrements, **tous dans le même dossier que la page, préfixés `audio_`** : `audio_xxx.m4a` (original, sans perte) + `audio_xxx.piano.m4a` et `audio_xxx.voix.m4a` (séparés par IA, mono AAC 96 kbps) |
+| `audio/audio_*.m4a` | Les enregistrements, dans le dossier `audio/`, **tous préfixés `audio_`** : `audio_xxx.m4a` (original, sans perte) + `audio_xxx.piano.m4a` et `audio_xxx.voix.m4a` (séparés par IA, mono AAC 96 kbps) |
 | `sw.js`, `manifest.webmanifest`, `icon*` | Installation sur l'écran d'accueil + hors ligne |
 
 ## Mise en ligne privée (gratuit)
@@ -30,12 +30,12 @@ Pour que les fichiers audio soient protégés aussi, l'application Access doit c
 Dans `morceaux.json`, chaque exercice a une liste de `pistes` :
 
 ```json
-{ "label": "Lecture", "role": "lecture", "original": "audio_3b.m4a", "piano": "audio_3b.piano.m4a", "voix": "audio_3b.voix.m4a", "duree": 45 }
+{ "label": "Lecture", "role": "lecture", "original": "audio/audio_3b.m4a", "piano": "audio/audio_3b.piano.m4a", "voix": "audio/audio_3b.voix.m4a", "duree": 45 }
 ```
 
 - `role` : `lecture`, `variante`, `accompagnement` ou `autre`.
 - `duree` en secondes (affichage uniquement ; le lecteur lit la vraie durée).
-- Pour ajouter un enregistrement : déposer le(s) fichier(s) à côté de `index.html`, avec le préfixe `audio_` (le service worker s'en sert pour reconnaître les fichiers audio), et ajouter une ligne. `original` et `voix` sont facultatifs : sans `voix`, le lecteur masque le choix Original / Piano + voix et le curseur de voix, et ne joue que `piano` (utile pour un enregistrement déjà sans voix).
+- Pour ajouter un enregistrement : déposer le(s) fichier(s) dans `audio/`, avec le préfixe `audio_` (le service worker s'en sert pour reconnaître les fichiers audio), et ajouter une ligne. `original` et `voix` sont facultatifs : sans `voix`, le lecteur masque le choix Original / Piano + voix et le curseur de voix, et ne joue que `piano` (utile pour un enregistrement déjà sans voix).
 - Les curseurs vont de 0 à 150 % (piano 100 %, voix 40 % au départ). Le réglage est mémorisé sur l'appareil.
 - Les enregistrements « Enregistrement du JJ/MM à HHhMM » (section *Autres*) ont des titres provisoires : renomme-les dans le JSON (`autres.pistes[].label`) ou déplace-les dans l'exercice correspondant.
 

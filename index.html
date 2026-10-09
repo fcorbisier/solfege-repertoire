@@ -12,7 +12,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Solfège">
 <style>
-
 :root {
   --bg: #faf8f3; --card: #ffffff; --ink: #1d2433; --muted: #6a7285; --line: #e3dfd4;
   --accent: #243b6b; --accent-ink: #ffffff; --soft: #e8edf7; --playing: #fff2d6;
@@ -206,7 +205,8 @@ select.btn { appearance: auto; }
     if (!('caches' in window)) return;
     try {
       const c = await caches.open(CACHE);
-      for (const req of await c.keys()) cachedSet.add(new URL(req.url).pathname.replace(/^.*\/(audio_[^/]*)$/, '$1'));
+      const base = new URL('./', location.href).pathname;   // dossier de la page (ex. /solfege-repertoire/)
+      for (const req of await c.keys()) { const pn = new URL(req.url).pathname; cachedSet.add(pn.startsWith(base) ? pn.slice(base.length) : pn); }
     } catch {}
     updateOfflineBtn();
   }
